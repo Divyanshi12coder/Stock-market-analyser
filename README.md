@@ -1,23 +1,36 @@
-# Stock Market Analyzer
+# wrappy
 
-This project provides a simple tool to analyze stock market data. It fetches live prices, applies basic technical indicators (SMA, EMA, RSI), and generates insights to help understand market trends.
+Callback wrapping utility
 
-## Features
-- Real-time stock data retrieval
-- Technical analysis indicators
-- Easy visualization of trends
-- Beginner-friendly setup
+## USAGE
 
-## Installation
-Clone the repository and install dependencies:
-```bash
-git clone https://github.com/yourusername/stock-market-analyzer.git
-cd stock-market-analyzer
-pip install -r requirements.txt
-python analyzer.py
-Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+```javascript
+var wrappy = require("wrappy")
 
-License
-[Looks like the result wasn't safe to show. Let's switch things up and try something else!]
+// var wrapper = wrappy(wrapperFunction)
 
+// make sure a cb is called only once
+// See also: http://npm.im/once for this specific use case
+var once = wrappy(function (cb) {
+  var called = false
+  return function () {
+    if (called) return
+    called = true
+    return cb.apply(this, arguments)
+  }
+})
+
+function printBoo () {
+  console.log('boo')
+}
+// has some rando property
+printBoo.iAmBooPrinter = true
+
+var onlyPrintOnce = once(printBoo)
+
+onlyPrintOnce() // prints 'boo'
+onlyPrintOnce() // does nothing
+
+// random property is retained!
+assert.equal(onlyPrintOnce.iAmBooPrinter, true)
+```
